@@ -13,12 +13,11 @@ const _env = envSchema.safeParse({
     VITE_GEMINI_API_KEY: import.meta.env.VITE_GEMINI_API_KEY,
 });
 
-if (!_env.success) {
-    console.error("❌ Invalid environment variables:", _env.error.format());
-}
-
-export const ENV = _env.data || {
-    VITE_SUPABASE_URL: "",
-    VITE_SUPABASE_ANON_KEY: "",
-    VITE_GEMINI_API_KEY: "",
+export const ENV = {
+    ...(_env.success ? _env.data : {
+        VITE_SUPABASE_URL: "",
+        VITE_SUPABASE_ANON_KEY: "",
+        VITE_GEMINI_API_KEY: "",
+    }),
+    IS_VALID: _env.success,
 };
