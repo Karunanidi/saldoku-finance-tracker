@@ -70,49 +70,55 @@ export const SavingsGoalPage = () => {
 
     return (
         <AppLayout title="Savings Goals" showAddButton={false}>
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col">
                 <section className="px-4 pt-6 pb-2">
                     <h3 className="text-[#111318] dark:text-white text-xl font-extrabold leading-tight tracking-[-0.015em]">Your Progress</h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400">You're on track to reach your targets</p>
                 </section>
 
-                <div className="flex overflow-x-auto hide-scrollbar snap-x pb-4">
-                    <div className="flex items-stretch px-4 gap-4">
-                        {goals.map((goal) => {
-                            const progress = goal.target_amount > 0 ? (goal.current_amount / goal.target_amount) * 100 : 0;
-                            return (
-                                <div key={goal.id} className="snap-center flex h-full flex-1 flex-col gap-4 rounded-xl min-w-[280px] bg-white dark:bg-gray-800 p-4 border border-gray-100 dark:border-gray-700 shadow-sm">
-                                    <div
-                                        className="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg flex flex-col items-center justify-center relative overflow-hidden"
-                                        style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url("${goal.image_url || getCategoryImage(goal.category || 'Other')}")` }}
-                                    >
-                                        <div className="absolute top-2 right-2 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">
-                                            {goal.category}
+                {goals.length > 0 ? (
+                    <div className="flex overflow-x-auto hide-scrollbar snap-x pb-4">
+                        <div className="flex items-stretch px-4 gap-4">
+                            {goals.map((goal) => {
+                                const progress = goal.target_amount > 0 ? (goal.current_amount / goal.target_amount) * 100 : 0;
+                                return (
+                                    <div key={goal.id} className="snap-center flex flex-col gap-4 rounded-xl min-w-[280px] bg-white dark:bg-gray-800 p-4 border border-gray-100 dark:border-gray-700 shadow-sm transition-all hover:shadow-md">
+                                        <div
+                                            className="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg flex flex-col items-center justify-center relative overflow-hidden"
+                                            style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url("${goal.image_url || getCategoryImage(goal.category || 'Other')}")` }}
+                                        >
+                                            <div className="absolute top-2 right-2 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">
+                                                {goal.category}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div className="flex justify-between items-center mb-1">
+                                                <p className="text-[#111318] dark:text-white text-base font-bold leading-normal truncate max-w-[150px]">{goal.name}</p>
+                                                <p className="text-primary text-sm font-bold">{progress.toFixed(0)}%</p>
+                                            </div>
+                                            <div className="w-full bg-gray-100 dark:bg-gray-700 h-2 rounded-full mb-2 overflow-hidden">
+                                                <div className="bg-primary h-2 rounded-full transition-all duration-500" style={{ width: `${Math.min(progress, 100)}%` }}></div>
+                                            </div>
+                                            <p className="text-[#616e89] dark:text-gray-400 text-sm font-normal leading-normal">
+                                                {formatCurrency(goal.current_amount)} of {formatCurrency(goal.target_amount)} saved
+                                            </p>
                                         </div>
                                     </div>
-                                    <div>
-                                        <div className="flex justify-between items-center mb-1">
-                                            <p className="text-[#111318] dark:text-white text-base font-bold leading-normal truncate max-w-[150px]">{goal.name}</p>
-                                            <p className="text-primary text-sm font-bold">{progress.toFixed(0)}%</p>
-                                        </div>
-                                        <div className="w-full bg-gray-100 dark:bg-gray-700 h-2 rounded-full mb-2 overflow-hidden">
-                                            <div className="bg-primary h-2 rounded-full transition-all duration-500" style={{ width: `${Math.min(progress, 100)}%` }}></div>
-                                        </div>
-                                        <p className="text-[#616e89] dark:text-gray-400 text-sm font-normal leading-normal">
-                                            {formatCurrency(goal.current_amount)} of {formatCurrency(goal.target_amount)} saved
-                                        </p>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                        {goals.length === 0 && !isLoading && (
-                            <div className="snap-center flex flex-col items-center justify-center rounded-xl min-w-[280px] min-h-[160px] bg-white dark:bg-gray-800 p-8 border border-dashed border-gray-300 dark:border-gray-600">
-                                <span className="material-symbols-outlined text-gray-400 text-4xl mb-2">savings</span>
-                                <p className="text-gray-500 text-sm text-center">No goals set yet. Create one below!</p>
-                            </div>
-                        )}
+                                );
+                            })}
+                        </div>
                     </div>
-                </div>
+                ) : !isLoading && (
+                    <div className="px-4 pb-4">
+                        <div className="flex flex-col items-center justify-center rounded-2xl min-h-[160px] bg-white dark:bg-gray-800/50 p-8 border border-dashed border-gray-300 dark:border-gray-700 shadow-sm">
+                            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                                <span className="material-symbols-outlined text-primary text-3xl">savings</span>
+                            </div>
+                            <p className="text-gray-900 dark:text-gray-100 font-bold mb-1">No goals yet</p>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm text-center">Set your first savings goal below to start tracking your progress!</p>
+                        </div>
+                    </div>
+                )}
 
                 <section className="mt-4 px-4 pb-24">
                     <div className="flex items-center gap-2 pb-6 pt-4 border-t border-gray-100 dark:border-gray-800 mt-2">
@@ -156,7 +162,7 @@ export const SavingsGoalPage = () => {
                                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#111318] dark:text-white font-bold">Rp</span>
                                 <input
                                     {...register('target_amount')}
-                                    className="form-input flex w-full rounded-xl text-[#111318] dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary border-[#dbdee6] dark:border-gray-700 bg-white dark:bg-gray-800 h-14 placeholder:text-[#616e89] pl-10 pr-4 text-base font-normal"
+                                    className="form-input flex w-full rounded-xl text-[#111318] dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary border-[#dbdee6] dark:border-gray-700 bg-white dark:bg-gray-800 h-14 placeholder:text-[#616e89] pl-12 pr-4 text-base font-normal"
                                     placeholder="0"
                                     type="number"
                                 />
