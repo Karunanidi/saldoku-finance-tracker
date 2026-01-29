@@ -10,5 +10,7 @@ export interface Goal {
     created_at?: string;
 }
 
-export type CreateGoalDTO = Omit<Goal, 'id' | 'user_id' | 'created_at'>;
+export type CreateGoalDTO = Omit<Goal, 'id' | 'user_id' | 'created_at'> & {
+    current_amount?: number;
+};
 export type UpdateGoalDTO = Partial<CreateGoalDTO>;
