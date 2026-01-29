@@ -96,9 +96,9 @@ export const ScannerPage = () => {
 
     const videoConstraints: MediaTrackConstraints = {
         facingMode: "environment",
-        width: { ideal: 1080 },
-        height: { ideal: 1920 },
-        aspectRatio: 9 / 16
+        // Using ideal without strict bounds to allow the browser to choose the best fit
+        width: { ideal: 1920 },
+        height: { ideal: 1080 }
     };
 
     return (
@@ -148,13 +148,13 @@ export const ScannerPage = () => {
                             videoConstraints={videoConstraints}
                             onUserMediaError={onCameraError}
                             playsInline
-                            className="absolute inset-0 w-full h-full object-cover"
+                            className="absolute inset-0 w-full h-full object-contain bg-black"
                         />
                     ) : (
                         <img
                             src={imageSrc}
                             alt="Captured Receipt"
-                            className="absolute inset-0 w-full h-full object-cover opacity-90"
+                            className="absolute inset-0 w-full h-full object-contain bg-black opacity-90"
                         />
                     )}
 
@@ -213,10 +213,19 @@ export const ScannerPage = () => {
                 </div>
 
                 {/* Review Extraction Sheet */}
+                {isReviewOpen && (
+                    <div
+                        className="fixed inset-0 bg-black/60 backdrop-blur-[2px] z-40 transition-opacity duration-300 ease-in-out"
+                        onClick={() => setIsReviewOpen(false)}
+                    />
+                )}
                 <div
-                    className={`fixed bottom-0 left-0 right-0 z-40 transform transition-transform duration-300 ease-in-out ${isReviewOpen ? 'translate-y-0' : 'translate-y-[110%]'}`}
+                    className={`fixed bottom-0 left-0 right-0 z-50 transform transition-transform duration-300 ease-out ${isReviewOpen ? 'translate-y-0' : 'translate-y-full'}`}
                 >
-                    <div className="flex flex-col items-stretch bg-background-light dark:bg-background-dark rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.3)] border-t border-zinc-200 dark:border-zinc-800 px-6 pb-8 pt-2 max-h-[80vh] overflow-y-auto">
+                    <div
+                        className="flex flex-col items-stretch bg-background-light dark:bg-background-dark rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.3)] border-t border-zinc-200 dark:border-zinc-800 px-6 pb-8 pt-2 max-h-[85vh] overflow-y-auto"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <div className="flex h-10 w-full items-center justify-center mb-2">
                             <div className="h-1.5 w-12 rounded-full bg-zinc-300 dark:bg-zinc-700"></div>
                         </div>

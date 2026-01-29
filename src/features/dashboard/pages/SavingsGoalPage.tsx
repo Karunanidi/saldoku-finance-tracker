@@ -109,7 +109,11 @@ export const SavingsGoalPage = () => {
     const handleDeleteConfirm = () => {
         if (selectedGoal) {
             deleteGoal(selectedGoal.id, {
-                onSuccess: () => setIsDeleteModalOpen(false)
+                onSuccess: () => setIsDeleteModalOpen(false),
+                onError: (error: any) => {
+                    console.error("Delete error:", error);
+                    alert("Failed to delete goal. Please contact admin!");
+                }
             });
         }
     };
@@ -200,7 +204,7 @@ export const SavingsGoalPage = () => {
                                                         </p>
                                                     )}
                                                 </div>
-                                                <button 
+                                                <button
                                                     onClick={() => handleAddAmountClick(goal)}
                                                     className="flex items-center gap-1 text-primary text-xs font-bold hover:underline"
                                                 >
