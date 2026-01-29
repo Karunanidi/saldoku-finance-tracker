@@ -5,6 +5,7 @@ import { useAuthStore } from '@/features/auth/store/authStore';
 import { LoginPage } from '@/features/auth/pages/LoginPage';
 import { RegisterPage } from '@/features/auth/pages/RegisterPage';
 import { DashboardPage } from '@/features/dashboard/pages/DashboardPage';
+import { ContactAdminPage } from '@/features/auth/pages/ContactAdminPage';
 import { AnalyticsPage } from './features/analytics/pages/AnalyticsPage';
 import { ScannerPage } from './features/ocr/pages/ScannerPage';
 import { SettingsPage } from './features/settings/pages/SettingsPage';
@@ -70,6 +71,7 @@ function App() {
         <Route element={<PublicRoute />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/contact-admin" element={<ContactAdminPage />} />
         </Route>
 
         {/* Protected Routes (only for logged in users) */}
