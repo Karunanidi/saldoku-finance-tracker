@@ -45,11 +45,16 @@ export const TransactionForm = ({ onSuccess, onCancel }: TransactionFormProps) =
             return;
         }
 
+        // Create a Date object in local time using the selected date and current time
+        const [year, month, day] = date.split('-').map(Number);
+        const now = new Date();
+        const transactionDate = new Date(year, month - 1, day, now.getHours(), now.getMinutes(), now.getSeconds());
+
         const transactionData: CreateTransactionDTO = {
             amount: parseFloat(amount),
             category: category as any, // Cast to any or TransactionCategory to satisfy TS
             description: description,
-            date: new Date(date).toISOString(),
+            date: transactionDate.toISOString(),
             is_expense: isExpense
         };
 

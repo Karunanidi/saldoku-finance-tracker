@@ -1,5 +1,5 @@
 import { Transaction } from '@/data/models/Transaction';
-import { format } from 'date-fns';
+import { parseISO, format } from 'date-fns';
 import { useDeleteTransaction } from '../hooks/useTransactions';
 import { formatCurrency } from '@/core/utils/currency';
 
@@ -22,7 +22,7 @@ export const TransactionList = ({ transactions, isLoading }: TransactionListProp
     return (
         <div className="flex flex-col gap-3">
             {transactions.map((transaction) => {
-                // Simple mapping for icons based on category (can be expanded)
+                // ... (icons logic)
                 let icon = 'paid';
                 let colorClass = 'bg-gray-100 text-gray-600';
 
@@ -45,7 +45,7 @@ export const TransactionList = ({ transactions, isLoading }: TransactionListProp
                         <div className="flex-1">
                             <p className="text-[#111318] dark:text-white text-sm font-bold">{transaction.description || transaction.category}</p>
                             <p className="text-[#616e89] dark:text-gray-400 text-xs">
-                                {format(new Date(transaction.date), 'MMM d, h:mm a')} • {transaction.category}
+                                {format(parseISO(transaction.date), 'MMM d, h:mm a')} • {transaction.category}
                             </p>
                         </div>
                         <div className="text-right">
