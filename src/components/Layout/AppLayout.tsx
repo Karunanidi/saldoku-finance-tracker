@@ -47,28 +47,28 @@ export const AppLayout = ({ children, title, showAddButton = true }: AppLayoutPr
                         </div>
                     </div>
                     <nav className="space-y-1">
-                        <button onClick={() => navigate('/')} className={`w-full flex items-center gap-3 p-3 rounded-xl ${isActive('/')}`}>
+                        <button onClick={() => { navigate('/'); setIsMenuOpen(false); }} className={`w-full flex items-center gap-3 p-3 rounded-xl ${isActive('/')}`}>
                             <span className="material-symbols-outlined">home</span>
                             <span>Dashboard</span>
                         </button>
-                        <button onClick={() => navigate('/analytics')} className={`w-full flex items-center gap-3 p-3 rounded-xl ${isActive('/analytics')}`}>
+                        <button onClick={() => { navigate('/analytics'); setIsMenuOpen(false); }} className={`w-full flex items-center gap-3 p-3 rounded-xl ${isActive('/analytics')}`}>
                             <span className="material-symbols-outlined">pie_chart</span>
                             <span>Analytics</span>
                         </button>
-                        <button onClick={() => navigate('/history')} className={`w-full flex items-center gap-3 p-3 rounded-xl ${isActive('/history')}`}>
+                        <button onClick={() => { navigate('/history'); setIsMenuOpen(false); }} className={`w-full flex items-center gap-3 p-3 rounded-xl ${isActive('/history')}`}>
                             <span className="material-symbols-outlined">receipt_long</span>
                             <span>Transactions</span>
                         </button>
-                        <button onClick={() => navigate('/savings-goals')} className={`w-full flex items-center gap-3 p-3 rounded-xl ${isActive('/savings-goals')}`}>
+                        <button onClick={() => { navigate('/savings-goals'); setIsMenuOpen(false); }} className={`w-full flex items-center gap-3 p-3 rounded-xl ${isActive('/savings-goals')}`}>
                             <span className="material-symbols-outlined">savings</span>
                             <span>Savings Goals</span>
                         </button>
-                        <button onClick={() => navigate('/scan')} className={`w-full flex items-center gap-3 p-3 rounded-xl ${isActive('/scan')}`}>
+                        <button onClick={() => { navigate('/scan'); setIsMenuOpen(false); }} className={`w-full flex items-center gap-3 p-3 rounded-xl ${isActive('/scan')}`}>
                             <span className="material-symbols-outlined">document_scanner</span>
                             <span>Scan Receipt</span>
                         </button>
                         <hr className="my-4 border-gray-100 dark:border-gray-800" />
-                        <button onClick={() => navigate('/settings')} className={`w-full flex items-center gap-3 p-3 rounded-xl ${isActive('/settings')}`}>
+                        <button onClick={() => { navigate('/settings'); setIsMenuOpen(false); }} className={`w-full flex items-center gap-3 p-3 rounded-xl ${isActive('/settings')}`}>
                             <span className="material-symbols-outlined">settings</span>
                             <span>Settings</span>
                         </button>

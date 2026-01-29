@@ -85,6 +85,7 @@ function App() {
           <Route path="/history" element={<HistoryPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/savings-goals" element={<SavingsGoalPage />} />
+          <Route path="/savings-goal" element={<SavingsGoalPage />} />
           {/* Add more protected routes here */}
         </Route>
 
