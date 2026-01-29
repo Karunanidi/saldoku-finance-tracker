@@ -59,6 +59,10 @@ export const AppLayout = ({ children, title, showAddButton = true }: AppLayoutPr
                             <span className="material-symbols-outlined">receipt_long</span>
                             <span>Transactions</span>
                         </button>
+                        <button onClick={() => navigate('/savings-goals')} className={`w-full flex items-center gap-3 p-3 rounded-xl ${isActive('/savings-goals')}`}>
+                            <span className="material-symbols-outlined">savings</span>
+                            <span>Savings Goals</span>
+                        </button>
                         <button onClick={() => navigate('/scan')} className={`w-full flex items-center gap-3 p-3 rounded-xl ${isActive('/scan')}`}>
                             <span className="material-symbols-outlined">document_scanner</span>
                             <span>Scan Receipt</span>
