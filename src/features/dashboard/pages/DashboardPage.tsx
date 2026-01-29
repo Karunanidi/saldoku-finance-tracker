@@ -26,8 +26,8 @@ export const DashboardPage = () => {
 
     // Calculate Goal Progress
     const goalProgress = primaryGoal && primaryGoal.target_amount > 0
-        ? Math.min((totalBalance / primaryGoal.target_amount) * 100, 100)
-        : 0; // Fallback to total balance logic for now, or use current_amount if manually tracked
+        ? Math.min((primaryGoal.current_amount / primaryGoal.target_amount) * 100, 100)
+        : 0;
 
     return (
         <AppLayout title="Dashboard" showAddButton={true}>
