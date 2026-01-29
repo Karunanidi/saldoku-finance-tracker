@@ -18,7 +18,6 @@ type GoalFormInput = z.infer<typeof goalSchema>;
 const CATEGORIES = ['Emergency', 'Travel', 'Tech', 'Health', 'Education', 'Other'];
 
 export const SavingsGoalPage = () => {
-    console.log('SavingsGoalPage mounting...');
     const { data: goals = [], isLoading } = useGoals();
     const { mutate: saveGoal, isPending } = useSaveGoal();
     const [selectedCategory, setSelectedCategory] = useState<string>('Emergency');
