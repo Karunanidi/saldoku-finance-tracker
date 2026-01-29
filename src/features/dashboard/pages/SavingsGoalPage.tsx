@@ -25,6 +25,7 @@ export const SavingsGoalPage = () => {
     const { mutate: saveGoal, isPending } = useSaveGoal();
     const [selectedCategory, setSelectedCategory] = useState<string>('Emergency');
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedGoal, setSelectedGoal] = useState<any>(null);
@@ -59,6 +60,7 @@ export const SavingsGoalPage = () => {
                 reset();
                 setSelectedCategory('Emergency');
                 setValue('category', 'Emergency');
+                setIsCreateModalOpen(false);
             }
         });
     };
@@ -184,13 +186,21 @@ export const SavingsGoalPage = () => {
                                                 <p className="text-primary text-sm font-bold">{progress.toFixed(0)}%</p>
                                             </div>
                                             <div className="w-full bg-gray-100 dark:bg-gray-700 h-2 rounded-full mb-2 overflow-hidden">
-                                                <div className="bg-primary h-2 rounded-full transition-all duration-500" style={{ width: `${Math.min(progress, 100)}%` }}></div>
+                                                <div className={`h-2 rounded-full transition-all duration-500 ${progress >= 100 ? 'bg-green-500' : 'bg-primary'}`} style={{ width: `${Math.min(progress, 100)}%` }}></div>
                                             </div>
                                             <div className="flex justify-between items-end">
-                                                <p className="text-[#616e89] dark:text-gray-400 text-xs font-normal leading-normal">
-                                                    {formatCurrency(goal.current_amount)} of {formatCurrency(goal.target_amount)} saved
-                                                </p>
-                                                <button
+                                                <div>
+                                                    <p className="text-[#616e89] dark:text-gray-400 text-xs font-normal leading-normal">
+                                                        {formatCurrency(goal.current_amount)} of {formatCurrency(goal.target_amount)} saved
+                                                    </p>
+                                                    {progress >= 100 && (
+                                                        <p className="text-green-600 dark:text-green-400 text-[10px] font-bold flex items-center gap-1 mt-1">
+                                                            <span className="material-symbols-outlined text-xs">verified</span>
+                                                            Goal Achieved!
+                                                        </p>
+                                                    )}
+                                                </div>
+                                                <button 
                                                     onClick={() => handleAddAmountClick(goal)}
                                                     className="flex items-center gap-1 text-primary text-xs font-bold hover:underline"
                                                 >
@@ -211,85 +221,86 @@ export const SavingsGoalPage = () => {
                                 <span className="material-symbols-outlined text-primary text-3xl">savings</span>
                             </div>
                             <p className="text-gray-900 dark:text-gray-100 font-bold mb-1">No goals yet</p>
-                            <p className="text-gray-500 dark:text-gray-400 text-sm text-center">Set your first savings goal below to start tracking your progress!</p>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm text-center mb-6">Set your first savings goal to start tracking your progress!</p>
+                            <Button onClick={() => setIsCreateModalOpen(true)}>Create First Goal</Button>
                         </div>
                     </div>
                 )}
+            </div>
 
-                <section className="mt-4 px-4 pb-24">
-                    <div className="flex items-center gap-2 pb-6 pt-4 border-t border-gray-100 dark:border-gray-800 mt-2">
-                        <span className="material-symbols-outlined text-primary text-2xl">add_circle</span>
-                        <h3 className="text-[#111318] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Create New Goal</h3>
+            {/* Floating Action Button */}
+            <button
+                onClick={() => { reset(); setIsCreateModalOpen(true); }}
+                className="fixed bottom-6 right-6 bg-primary hover:bg-primary/90 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg shadow-primary/30 transition-transform active:scale-95 z-40"
+            >
+                <span className="material-symbols-outlined text-3xl">add</span>
+            </button>
+
+            {/* Create Goal Modal */}
+            <Modal
+                isOpen={isCreateModalOpen}
+                onClose={() => setIsCreateModalOpen(false)}
+                title="Create New Goal"
+                footer={
+                    <>
+                        <Button variant="outline" onClick={() => setIsCreateModalOpen(false)}>Cancel</Button>
+                        <Button onClick={handleSubmit(onSubmit)} isLoading={isPending}>Set Goal</Button>
+                    </>
+                }
+            >
+                <form className="flex flex-col gap-4">
+                    <div className="flex flex-col w-full">
+                        <p className="text-[#111318] dark:text-gray-300 text-sm font-semibold pb-1">Goal Name</p>
+                        <Input
+                            {...register('name')}
+                            placeholder="e.g. Emergency Fund"
+                            error={errors.name?.message}
+                        />
                     </div>
 
-                    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-                        <div className="flex flex-col w-full">
-                            <p className="text-[#111318] dark:text-gray-300 text-sm font-semibold pb-2">Goal Name</p>
-                            <input
-                                {...register('name')}
-                                className="form-input flex w-full rounded-xl text-[#111318] dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary border-[#dbdee6] dark:border-gray-700 bg-white dark:bg-gray-800 h-14 placeholder:text-[#616e89] px-4 text-base font-normal"
-                                placeholder="e.g. Emergency Fund"
+                    <div className="flex flex-col w-full">
+                        <p className="text-[#111318] dark:text-gray-300 text-sm font-semibold pb-1">Category</p>
+                        <div className="flex overflow-x-auto hide-scrollbar gap-2 py-1">
+                            {CATEGORIES.map(cat => (
+                                <button
+                                    key={cat}
+                                    type="button"
+                                    onClick={() => handleCategorySelect(cat)}
+                                    className={`flex-none px-4 py-1.5 rounded-full border text-xs font-medium transition-colors ${selectedCategory === cat
+                                        ? 'border-primary bg-primary text-white'
+                                        : 'border-[#dbdee6] dark:border-gray-700 text-[#616e89] dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                                        }`}
+                                >
+                                    {cat}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col w-full">
+                        <p className="text-[#111318] dark:text-gray-300 text-sm font-semibold pb-1">Target Amount</p>
+                        <div className="relative">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-gray-500">Rp</span>
+                            <Input
+                                {...register('target_amount')}
+                                className="pl-10"
+                                placeholder="0"
+                                type="number"
+                                error={errors.target_amount?.message}
                             />
-                            {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
                         </div>
+                    </div>
 
-                        <div className="flex flex-col w-full">
-                            <p className="text-[#111318] dark:text-gray-300 text-sm font-semibold pb-3">Category</p>
-                            <div className="flex overflow-x-auto hide-scrollbar gap-2 pb-1 -mx-4 px-4">
-                                {CATEGORIES.map(cat => (
-                                    <button
-                                        key={cat}
-                                        type="button"
-                                        onClick={() => handleCategorySelect(cat)}
-                                        className={`flex-none px-5 py-2.5 rounded-full border text-sm font-medium transition-colors ${selectedCategory === cat
-                                            ? 'border-primary bg-primary text-white'
-                                            : 'border-[#dbdee6] dark:border-gray-700 text-[#616e89] dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-                                            }`}
-                                    >
-                                        {cat}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="flex flex-col w-full">
-                            <p className="text-[#111318] dark:text-gray-300 text-sm font-semibold pb-2">Target Amount</p>
-                            <div className="relative">
-                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#111318] dark:text-white font-bold">Rp</span>
-                                <input
-                                    {...register('target_amount')}
-                                    className="form-input flex w-full rounded-xl text-[#111318] dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary border-[#dbdee6] dark:border-gray-700 bg-white dark:bg-gray-800 h-14 placeholder:text-[#616e89] pl-12 pr-4 text-base font-normal"
-                                    placeholder="0"
-                                    type="number"
-                                />
-                            </div>
-                            {errors.target_amount && <p className="text-red-500 text-xs mt-1">{errors.target_amount.message}</p>}
-                        </div>
-
-                        <div className="flex flex-col w-full">
-                            <p className="text-[#111318] dark:text-gray-300 text-sm font-semibold pb-2">Target Date</p>
-                            <div className="relative">
-                                <input
-                                    {...register('target_date')}
-                                    className="form-input flex w-full rounded-xl text-[#111318] dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary border-[#dbdee6] dark:border-gray-700 bg-white dark:bg-gray-800 h-14 placeholder:text-[#616e89] px-4 text-base font-normal appearance-none"
-                                    type="date"
-                                />
-                                <span className="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-gray-400 pointer-events-none">calendar_today</span>
-                            </div>
-                            {errors.target_date && <p className="text-red-500 text-xs mt-1">{errors.target_date.message}</p>}
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={isPending}
-                            className="w-full bg-primary hover:bg-[#1d4ed8] text-white font-bold py-4 px-6 rounded-xl mt-2 flex items-center justify-center gap-2 shadow-lg shadow-primary/20 active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed"
-                        >
-                            <span>{isPending ? 'Saving...' : 'Set Goal'}</span>
-                            <span className="material-symbols-outlined">rocket_launch</span>
-                        </button>
-                    </form>
-                </section>
-            </div>
+                    <div className="flex flex-col w-full">
+                        <p className="text-[#111318] dark:text-gray-300 text-sm font-semibold pb-1">Target Date</p>
+                        <Input
+                            {...register('target_date')}
+                            type="date"
+                            error={errors.target_date?.message}
+                        />
+                    </div>
+                </form>
+            </Modal>
 
             {/* Add Amount Modal */}
             <Modal
