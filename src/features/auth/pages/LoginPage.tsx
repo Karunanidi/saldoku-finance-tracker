@@ -90,7 +90,7 @@ export const LoginPage = () => {
                             <label className="flex flex-col min-w-40 flex-1">
                                 <div className="flex justify-between items-center pb-2 px-1">
                                     <p className="text-[#111318] dark:text-gray-200 text-sm font-semibold leading-normal">Password</p>
-                                    <a className="text-primary text-sm font-semibold hover:underline" href="#">Forgot?</a>
+                                    <Link to="/contact-admin" className="text-primary text-sm font-semibold hover:underline">Forgot?</Link>
                                 </div>
                                 <div className="relative">
                                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#616e89]" data-icon="lock">lock</span>

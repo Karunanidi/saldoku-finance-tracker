@@ -2,9 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .allow-select {
+    user-select: text;
+    -webkit-user-select: text;
+  }
+}
+
 @layer base {
   body {
     @apply bg-background-light text-[#111318] dark:bg-background-dark dark:text-white font-sans min-h-screen;
+    user-select: none;
+    -webkit-user-select: none;
   }
 }
 

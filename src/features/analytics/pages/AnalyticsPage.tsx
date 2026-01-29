@@ -75,7 +75,7 @@ export const AnalyticsPage = () => {
                             <h3 className="text-lg font-bold">Category Breakdown</h3>
                         </div>
 
-                        <div className="h-64 relative">
+                        <div className="h-64 relative w-full min-w-0">
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
                                     <Pie
@@ -120,7 +120,7 @@ export const AnalyticsPage = () => {
                 <div className="px-4 mt-6">
                     <div className="bg-white dark:bg-gray-900 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
                         <h3 className="text-lg font-bold mb-6">Spending Trend</h3>
-                        <div className="h-48 w-full">
+                        <div className="h-48 w-full min-w-0">
                             <ResponsiveContainer width="100%" height="100%">
                                 <AreaChart data={trendData}>
                                     <defs>

@@ -5,19 +5,29 @@ import { useTransactions } from '@/features/transactions/hooks/useTransactions';
 import { TransactionList } from '@/features/transactions/components/TransactionList';
 import { SpendingInsights } from '@/features/analytics/components/SpendingInsights';
 import { TransactionForm } from '@/features/transactions/components/TransactionForm';
+import { useGoals } from '../hooks/useGoal';
 import { formatCurrency } from '@/core/utils/currency';
 import { AppLayout } from '@/components/Layout/AppLayout';
 
 export const DashboardPage = () => {
     // const { user } = useAuthStore(); // Keep user for any dashboard-specific logic if needed
     const navigate = useNavigate();
-    const { data: transactions = [], isLoading } = useTransactions();
+    const { data: transactions = [] } = useTransactions();
+    const { data: goals = [], isLoading } = useGoals();
     const [isFormOpen, setIsFormOpen] = useState(false);
+
+    // Use the first goal for the dashboard preview
+    const primaryGoal = goals[0];
 
     // Calculate Summary
     const totalBalance = transactions.reduce((acc, curr) => curr.is_expense ? acc - curr.amount : acc + curr.amount, 0);
     const totalIncome = transactions.filter(t => !t.is_expense).reduce((acc, curr) => acc + curr.amount, 0);
     const totalExpense = transactions.filter(t => t.is_expense).reduce((acc, curr) => acc + curr.amount, 0);
+
+    // Calculate Goal Progress
+    const goalProgress = primaryGoal && primaryGoal.target_amount > 0
+        ? Math.min((totalBalance / primaryGoal.target_amount) * 100, 100)
+        : 0; // Fallback to total balance logic for now, or use current_amount if manually tracked
 
     return (
         <AppLayout title="Dashboard" showAddButton={true}>
@@ -72,9 +82,25 @@ export const DashboardPage = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white/10 px-6 py-3 flex justify-between items-center">
-                        <p className="text-xs text-blue-50 font-medium">Savings Goal: House Downpayment</p>
-                        <p className="text-xs text-white font-bold">65%</p>
+                    <div className="bg-white/10 px-6 py-3 flex justify-between items-center cursor-pointer hover:bg-white/20 transition-colors" onClick={() => navigate('/savings-goals')}>
+                        <div className="flex-1">
+                            <p className="text-xs text-blue-50 font-medium mb-1">
+                                {primaryGoal ? `Savings Goal: ${primaryGoal.name}` : 'Set a Savings Goal'}
+                            </p>
+                            <div className="w-full bg-blue-900/30 rounded-full h-1.5 overflow-hidden">
+                                <div
+                                    className="bg-white h-full rounded-full transition-all duration-500 ease-out"
+                                    style={{ width: `${goalProgress}%` }}
+                                ></div>
+                            </div>
+                        </div>
+                        <div className="ml-4 text-right">
+                            {primaryGoal ? (
+                                <p className="text-xs text-white font-bold">{goalProgress.toFixed(0)}%</p>
+                            ) : (
+                                <span className="material-symbols-outlined text-white text-sm">arrow_forward</span>
+                            )}
+                        </div>
                     </div>
                 </div>
 
@@ -87,7 +113,7 @@ export const DashboardPage = () => {
             <div className="px-4 pt-6 pb-20">
                 <div className="flex items-center justify-between mb-2">
                     <h3 className="text-[#111318] dark:text-white text-base font-bold leading-tight tracking-[-0.015em]">Recent Transactions</h3>
-                    <button onClick={() => navigate('/analytics')} className="text-primary text-xs font-bold">View All</button>
+                    <button onClick={() => navigate('/history')} className="text-primary text-xs font-bold">View All</button>
                 </div>
 
                 <TransactionList transactions={transactions} isLoading={isLoading} />

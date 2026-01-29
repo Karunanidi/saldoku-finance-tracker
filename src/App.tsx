@@ -6,10 +6,12 @@ import { LoginPage } from '@/features/auth/pages/LoginPage';
 import { RegisterPage } from '@/features/auth/pages/RegisterPage';
 import { DashboardPage } from '@/features/dashboard/pages/DashboardPage';
 import { ContactAdminPage } from '@/features/auth/pages/ContactAdminPage';
-import { AnalyticsPage } from './features/analytics/pages/AnalyticsPage';
-import { ScannerPage } from './features/ocr/pages/ScannerPage';
-import { SettingsPage } from './features/settings/pages/SettingsPage';
-import { HistoryPage } from './features/transactions/pages/HistoryPage';
+import { DevelopmentBanner } from '@/components/DevelopmentBanner';
+import { AnalyticsPage } from '@/features/analytics/pages/AnalyticsPage';
+import { SavingsGoalPage } from '@/features/dashboard/pages/SavingsGoalPage';
+import { ScannerPage } from '@/features/ocr/pages/ScannerPage';
+import { SettingsPage } from '@/features/settings/pages/SettingsPage';
+import { HistoryPage } from '@/features/transactions/pages/HistoryPage';
 import { ProtectedRoute } from '@/routes/ProtectedRoute';
 import { PublicRoute } from '@/routes/PublicRoute';
 import { ENV } from '@/core/config/env';
@@ -66,6 +68,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <DevelopmentBanner />
       <Routes>
         {/* Public Routes (only for non-logged in users) */}
         <Route element={<PublicRoute />}>
@@ -81,6 +84,7 @@ function App() {
           <Route path="/scan" element={<ScannerPage />} />
           <Route path="/history" element={<HistoryPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/savings-goals" element={<SavingsGoalPage />} />
           {/* Add more protected routes here */}
         </Route>
 
