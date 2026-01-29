@@ -25,3 +25,14 @@ export const useSaveGoal = () => {
         },
     });
 };
+
+export const useDeleteGoal = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (id: string) => goalRepository.delete(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['goals'] });
+        },
+    });
+};

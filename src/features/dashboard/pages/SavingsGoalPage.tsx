@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { AppLayout } from '@/components/Layout/AppLayout';
-import { useGoals, useSaveGoal } from '../hooks/useGoal';
+import { useGoals, useSaveGoal, useDeleteGoal } from '../hooks/useGoal';
 import { formatCurrency } from '@/core/utils/currency';
 
 const goalSchema = z.object({
@@ -62,9 +62,31 @@ export const SavingsGoalPage = () => {
 
     const getCategoryImage = (category: string) => {
         switch (category) {
-            case 'Tech': return 'https://lh3.googleusercontent.com/aida-public/AB6AXuCPo0OUC_qoFpxZEr3uEbZNLp_fKfOjQ996pxyVHxozNytLnXdFk2kbG4C3uQisR-iqAG0LgWM_YRkqCqIosWfgY4v7bcmvk-BB-LxioFpV7BLh5p10YeupeP3JFP4a85WZiGlHiCIGXcgVuhpU-VseUC7kyTyPf05C1FYQ_S1H_Pa8eSbh4UtAikpXecHmLMPhKepaA6bd8ykXNPkmX5vNARo5YxYAUcAiVVuo-E2LckURE-Jy0m6WDKgtnWH4DSz3gBavVgxpsKIq';
-            case 'Travel': return 'https://lh3.googleusercontent.com/aida-public/AB6AXuAC8tEMpPSmSNSIEZARDrsmtk5Ya-RQQVeDtQRcKheVWYCpBD3yIsnBSqZMvR7aBT1XdGm1za0taVQdflOP6uJbWkm57FhqtvI1Ze8ADqtp0URpP9_ygwzqlyLVP91k59TbM06tfwYooTPxgMTK2_nh_BR8B7ZL1Eq4aq1uLnhIPqeVSmUm0Jh05xNIlqz9-2L6CpjlyKYOMSsyH-s1WWm8VkAQcAxP0CwX7Ec5qBgaeEt-4I55f5B6F7tDQp3ghAzP2LjuC4oN5Tx7';
-            default: return 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?q=80&w=2071&auto=format&fit=crop';
+            case 'Tech': return 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop';
+            case 'Travel': return 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=2021&auto=format&fit=crop';
+            case 'Emergency': return 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?q=80&w=2071&auto=format&fit=crop';
+            case 'Health': return 'https://images.unsplash.com/photo-1505751172107-16984e030bc2?q=80&w=2070&auto=format&fit=crop';
+            case 'Education': return 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070&auto=format&fit=crop';
+            default: return 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=2022&auto=format&fit=crop';
+        }
+    };
+
+    const { mutate: deleteGoal } = useDeleteGoal();
+
+    const handleAddAmount = (goalId: string, currentAmount: number, targetAmount: number) => {
+        const amount = prompt('How much would you like to add to this goal?', '0');
+        if (amount && !isNaN(Number(amount)) && Number(amount) > 0) {
+            const newAmount = currentAmount + Number(amount);
+            saveGoal({
+                id: goalId,
+                data: { current_amount: Math.min(newAmount, targetAmount) }
+            });
+        }
+    };
+
+    const handleDelete = (id: string, name: string) => {
+        if (confirm(`Are you sure you want to delete the goal "${name}"?`)) {
+            deleteGoal(id);
         }
     };
 
@@ -82,7 +104,7 @@ export const SavingsGoalPage = () => {
                             {goals.map((goal) => {
                                 const progress = goal.target_amount > 0 ? (goal.current_amount / goal.target_amount) * 100 : 0;
                                 return (
-                                    <div key={goal.id} className="snap-center flex flex-col gap-4 rounded-xl min-w-[280px] bg-white dark:bg-gray-800 p-4 border border-gray-100 dark:border-gray-700 shadow-sm transition-all hover:shadow-md">
+                                    <div key={goal.id} className="snap-center flex flex-col gap-4 rounded-xl min-w-[280px] bg-white dark:bg-gray-800 p-4 border border-gray-100 dark:border-gray-700 shadow-sm transition-all hover:shadow-md relative group">
                                         <div
                                             className="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg flex flex-col items-center justify-center relative overflow-hidden"
                                             style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url("${goal.image_url || getCategoryImage(goal.category || 'Other')}")` }}
@@ -90,6 +112,12 @@ export const SavingsGoalPage = () => {
                                             <div className="absolute top-2 right-2 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">
                                                 {goal.category}
                                             </div>
+                                            <button
+                                                onClick={() => handleDelete(goal.id, goal.name)}
+                                                className="absolute top-2 left-2 w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-red-500 transition-colors"
+                                            >
+                                                <span className="material-symbols-outlined text-sm">delete</span>
+                                            </button>
                                         </div>
                                         <div>
                                             <div className="flex justify-between items-center mb-1">
@@ -99,9 +127,18 @@ export const SavingsGoalPage = () => {
                                             <div className="w-full bg-gray-100 dark:bg-gray-700 h-2 rounded-full mb-2 overflow-hidden">
                                                 <div className="bg-primary h-2 rounded-full transition-all duration-500" style={{ width: `${Math.min(progress, 100)}%` }}></div>
                                             </div>
-                                            <p className="text-[#616e89] dark:text-gray-400 text-sm font-normal leading-normal">
-                                                {formatCurrency(goal.current_amount)} of {formatCurrency(goal.target_amount)} saved
-                                            </p>
+                                            <div className="flex justify-between items-end">
+                                                <p className="text-[#616e89] dark:text-gray-400 text-xs font-normal leading-normal">
+                                                    {formatCurrency(goal.current_amount)} of {formatCurrency(goal.target_amount)} saved
+                                                </p>
+                                                <button
+                                                    onClick={() => handleAddAmount(goal.id, goal.current_amount, goal.target_amount)}
+                                                    className="flex items-center gap-1 text-primary text-xs font-bold hover:underline"
+                                                >
+                                                    <span className="material-symbols-outlined text-xs">add_circle</span>
+                                                    <span>Add</span>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 );

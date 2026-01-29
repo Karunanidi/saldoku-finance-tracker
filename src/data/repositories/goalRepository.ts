@@ -39,5 +39,14 @@ export const goalRepository = {
 
         if (error) throw error;
         return data;
+    },
+
+    async delete(id: string): Promise<void> {
+        const { error } = await supabase
+            .from('goals')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
     }
 };
