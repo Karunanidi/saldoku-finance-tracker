@@ -106,8 +106,9 @@ export const SavingsGoalPage = () => {
                             );
                         })}
                         {goals.length === 0 && !isLoading && (
-                            <div className="snap-center flex h-full items-center justify-center rounded-xl min-w-[280px] bg-white dark:bg-gray-800 p-8 border border-dashed border-gray-300 dark:border-gray-600">
-                                <p className="text-gray-500">No goals set yet. Create one below!</p>
+                            <div className="snap-center flex flex-col items-center justify-center rounded-xl min-w-[280px] min-h-[160px] bg-white dark:bg-gray-800 p-8 border border-dashed border-gray-300 dark:border-gray-600">
+                                <span className="material-symbols-outlined text-gray-400 text-4xl mb-2">savings</span>
+                                <p className="text-gray-500 text-sm text-center">No goals set yet. Create one below!</p>
                             </div>
                         )}
                     </div>
@@ -139,8 +140,8 @@ export const SavingsGoalPage = () => {
                                         type="button"
                                         onClick={() => handleCategorySelect(cat)}
                                         className={`flex-none px-5 py-2.5 rounded-full border text-sm font-medium transition-colors ${selectedCategory === cat
-                                                ? 'border-primary bg-primary text-white'
-                                                : 'border-[#dbdee6] dark:border-gray-700 text-[#616e89] dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                                            ? 'border-primary bg-primary text-white'
+                                            : 'border-[#dbdee6] dark:border-gray-700 text-[#616e89] dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                                             }`}
                                     >
                                         {cat}
